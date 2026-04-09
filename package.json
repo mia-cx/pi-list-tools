@@ -5,6 +5,12 @@
   "version": "0.0.0",
   "description": "A tiny extension that exposes the current tool inventory, guidelines, and runtime docs section in markdown.",
   "keywords": ["pi-package"],
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.4"
+  },
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*",
     "@sinclair/typebox": "*"

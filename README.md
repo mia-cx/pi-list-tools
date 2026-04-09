@@ -12,7 +12,7 @@ Default system prompts bake in a static tool list and host-specific references. 
 |---|---|
 | `list_tools` | `Available tools:` with `name: description` bullets for every registered tool (built-in, extension, MCP) |
 | `list_guidelines` | `Guidelines:` with the active guideline bullets extracted from the system prompt |
-| `current_model` | `Current model:` with the active `provider/id` |
+| `current_model` | A formatted sentence with the active model's provider, display name, attribution email, and `provider/id` |
 | `runtime_docs` | The pi documentation section with `${readmePath}`, `${docsPath}`, and `${examplesPath}` resolved to real filesystem paths |
 
 All output comes from live session state, so it always reflects what is currently installed.
