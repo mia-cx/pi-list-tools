@@ -64,6 +64,10 @@ function isNumericSegment(segment: string) {
 	return /^\d+$/.test(segment);
 }
 
+function isDatePin(segment: string) {
+	return /^\d{8}$/.test(segment);
+}
+
 function parseAnthropicVersion(parts: Array<string>) {
 	if (parts.length === 0 || !isNumericSegment(parts[0])) {
 		return undefined;
@@ -101,6 +105,10 @@ function formatAnthropicModel(modelId: string) {
 		if (version) {
 			labelParts.push(version);
 		}
+	}
+
+	if (parts.length > 0 && isDatePin(parts[parts.length - 1])) {
+		parts.pop();
 	}
 
 	if (parts.length > 0) {
