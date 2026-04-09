@@ -46,18 +46,22 @@ function formatProvider(provider: string) {
 function formatOpenAIModel(modelId: string) {
 	const parts = modelId.split("-");
 	const family = parts.shift() ?? modelId;
-	const familyLabel = family === "gpt" ? "GPT" : titleCase(family);
+	const familyLabel = family === "gpt" ? "GPT" : /^o\d+$/i.test(family) ? family.toUpperCase() : titleCase(family);
 
 	if (parts.length === 0) {
 		return familyLabel;
 	}
 
-	return [
-		`${familyLabel}-${parts.shift()}`,
-		parts.map(titleCase).join(" "),
-	]
-		.filter(Boolean)
-		.join(" ");
+	if (/^\d/.test(parts[0])) {
+		return [
+			`${familyLabel}-${parts.shift()}`,
+			parts.map(titleCase).join(" "),
+		]
+			.filter(Boolean)
+			.join(" ");
+	}
+
+	return [familyLabel, parts.map(titleCase).join(" ")].filter(Boolean).join(" ");
 }
 
 function isNumericSegment(segment: string) {

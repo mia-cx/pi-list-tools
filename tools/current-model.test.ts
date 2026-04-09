@@ -62,6 +62,18 @@ const modelCases = [
 			"You're currently running as OpenAI Codex GPT-5.4 Mini <noreply@openai.com>, with the id \"openai-codex/gpt-5.4-mini\".",
 	},
 	{
+		label: "openai/o1",
+		model: { provider: "openai", id: "o1" },
+		modelLabel: "O1",
+		expected: "You're currently running as OpenAI O1 <noreply@openai.com>, with the id \"openai/o1\".",
+	},
+	{
+		label: "openai/o1-mini",
+		model: { provider: "openai", id: "o1-mini" },
+		modelLabel: "O1 Mini",
+		expected: "You're currently running as OpenAI O1 Mini <noreply@openai.com>, with the id \"openai/o1-mini\".",
+	},
+	{
 		label: "openai-codex/gpt-5.1-codex-max",
 		model: { provider: "openai-codex", id: "gpt-5.1-codex-max" },
 		modelLabel: "GPT-5.1 Codex Max",
