@@ -6,6 +6,10 @@ const PROVIDERS = {
 		label: "OpenAI",
 		email: "noreply@openai.com",
 	},
+	"openai-codex": {
+		label: "OpenAI Codex",
+		email: "noreply@openai.com",
+	},
 	anthropic: {
 		label: "Anthropic",
 		email: "noreply@anthropic.com",
@@ -20,30 +24,55 @@ function titleCase(segment: string) {
 	return `${segment[0].toUpperCase()}${segment.slice(1)}`;
 }
 
+function humanizeIdentifier(identifier: string) {
+	return identifier
+		.replace(/[-_]+/g, " ")
+		.split(" ")
+		.map(titleCase)
+		.join(" ");
+}
+
 function formatProvider(provider: string) {
 	const providerKey = provider.toLowerCase();
 	const knownProvider = providerKey in PROVIDERS ? PROVIDERS[providerKey as keyof typeof PROVIDERS] : undefined;
 
 	return {
 		providerKey,
-		label: knownProvider?.label ?? titleCase(providerKey),
+		label: knownProvider?.label ?? humanizeIdentifier(providerKey),
 		email: knownProvider?.email ?? `noreply@${providerKey}.com`,
 	};
 }
 
 function formatOpenAIModel(modelId: string) {
 	const parts = modelId.split("-");
-	const suffixes = new Set(["mini", "nano", "preview", "latest", "pro"]);
-	const suffix = parts.length > 1 && suffixes.has(parts[parts.length - 1]) ? titleCase(parts.pop()!) : undefined;
 	const family = parts.shift() ?? modelId;
 	const familyLabel = family === "gpt" ? "GPT" : titleCase(family);
-	const base = parts.length > 0 ? `${familyLabel}-${parts.join("-")}` : familyLabel;
 
-	return [base, suffix].filter(Boolean).join(" ");
+	if (parts.length === 0) {
+		return familyLabel;
+	}
+
+	return [
+		`${familyLabel}-${parts.shift()}`,
+		parts.map(titleCase).join(" "),
+	]
+		.filter(Boolean)
+		.join(" ");
 }
 
 function isNumericSegment(segment: string) {
 	return /^\d+$/.test(segment);
+}
+
+function parseAnthropicVersion(parts: Array<string>) {
+	if (parts.length === 0 || !isNumericSegment(parts[0])) {
+		return undefined;
+	}
+
+	const majorVersion = parts.shift()!;
+	const minorVersion = parts[0] && isNumericSegment(parts[0]) && parts[0].length <= 2 ? parts.shift()! : undefined;
+
+	return [majorVersion, minorVersion].filter(Boolean).join(".");
 }
 
 function formatAnthropicModel(modelId: string) {
@@ -57,19 +86,20 @@ function formatAnthropicModel(modelId: string) {
 	const labelParts = [titleCase(family)];
 
 	if (isNumericSegment(parts[0])) {
-		const majorVersion = parts.shift()!;
-		const minorVersion = parts[0] && isNumericSegment(parts[0]) ? parts.shift()! : undefined;
-		labelParts.push([majorVersion, minorVersion].filter(Boolean).join("."));
+		const version = parseAnthropicVersion(parts);
+		if (version) {
+			labelParts.push(version);
+		}
+
+		if (parts.length > 0) {
+			labelParts.push(titleCase(parts.shift()!));
+		}
 	} else {
 		labelParts.push(titleCase(parts.shift()!));
 
-		const versionParts = [];
-		while (parts.length > 0 && isNumericSegment(parts[0])) {
-			versionParts.push(parts.shift()!);
-		}
-
-		if (versionParts.length > 0) {
-			labelParts.push(versionParts.join("."));
+		const version = parseAnthropicVersion(parts);
+		if (version) {
+			labelParts.push(version);
 		}
 	}
 
@@ -85,7 +115,7 @@ function formatModel(provider: string, modelId: string) {
 	const providerKey = providerInfo.providerKey;
 
 	let modelLabel = modelId;
-	if (providerKey === "openai") {
+	if (providerKey.startsWith("openai")) {
 		modelLabel = formatOpenAIModel(modelId);
 	} else if (providerKey === "anthropic") {
 		modelLabel = formatAnthropicModel(modelId);
