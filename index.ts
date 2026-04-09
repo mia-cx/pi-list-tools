@@ -1,5 +1,31 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
+import { createRequire } from "node:module";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+
+const require = createRequire(import.meta.url);
+const packageEntry = require.resolve("@mariozechner/pi-coding-agent");
+
+function getRuntimeDocsPaths() {
+	let dir = dirname(packageEntry);
+
+	while (dir !== dirname(dir)) {
+		if (existsSync(join(dir, "package.json"))) {
+			return {
+				readmePath: resolve(join(dir, "README.md")),
+				docsPath: resolve(join(dir, "docs")),
+			};
+		}
+
+		dir = dirname(dir);
+	}
+
+	return {
+		readmePath: resolve(join(dirname(packageEntry), "README.md")),
+		docsPath: resolve(join(dirname(packageEntry), "docs")),
+	};
+}
 
 function extractGuidelines(systemPrompt: string): string[] {
 	const match = systemPrompt.match(/Guidelines:\n([\s\S]*?)(?:\n\nPi documentation:|\n\nCurrent date:|\nCurrent working directory:|$)/);
@@ -52,6 +78,22 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 			const payload = {
 				guidelines,
 			};
+
+			return {
+				content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+				details: payload,
+			};
+		},
+	});
+
+	pi.registerTool({
+		name: "runtime_docs",
+		label: "Runtime Docs",
+		description: "Get the current runtime README and docs paths.",
+		promptSnippet: "Get the current runtime README and docs paths.",
+		parameters: Type.Object({}),
+		async execute() {
+			const payload = getRuntimeDocsPaths();
 
 			return {
 				content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],

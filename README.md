@@ -1,6 +1,6 @@
 # pi-list-tools
 
-A tiny extension that exposes the current tool inventory via `list_tools`.
+A tiny extension that exposes the current tool inventory via `list_tools`, the current guidelines via `list_guidelines`, and the runtime documentation paths via `runtime_docs`.
 
 ## What it does
 
@@ -27,7 +27,7 @@ pi install git:github.com/mia-cx/pi-list-tools
 
 ## System prompt usage
 
-Use `list_tools` in the system prompt instead of naming the host application directly.
+Use `list_tools`, `list_guidelines`, and `runtime_docs` in the system prompt instead of naming the host application directly.
 
 The package entrypoint is `index.ts`, so it also works as a git-installed pi package.
 
@@ -35,3 +35,4 @@ Suggested wording:
 
 - Built-in tools: `read`, `write`, `edit`, `bash`, `mcp`
 - For anything beyond built-ins, call `list_tools` to inspect the current tool inventory.
+- To get the runtime README and docs paths, call `runtime_docs`.
