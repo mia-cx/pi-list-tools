@@ -29,7 +29,7 @@ function getRuntimeDocsPaths() {
 }
 
 function extractDocsSection(systemPrompt: string) {
-	const match = systemPrompt.match(/Pi documentation:\n([\s\S]*?)(?:\n\nCurrent date:|\n\n# Project Context|\nCurrent working directory:|$)/);
+	const match = systemPrompt.match(/Pi documentation[^\n]*:\n([\s\S]*?)(?:\nCurrent date:|\n# Project Context|\nCurrent working directory:|$)/);
 	if (!match) {
 		return "";
 	}
@@ -60,7 +60,7 @@ function formatGuidelineSection(guidelines: string[]) {
 }
 
 function extractGuidelines(systemPrompt: string): string[] {
-	const match = systemPrompt.match(/Guidelines:\n([\s\S]*?)(?:\n\nPi documentation:|\n\nCurrent date:|\nCurrent working directory:|$)/);
+	const match = systemPrompt.match(/Guidelines:\n([\s\S]*?)(?:\nPi documentation[^\n]*:|\nCurrent date:|\nCurrent working directory:|$)/);
 	if (!match) {
 		return [];
 	}
@@ -88,6 +88,7 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 
 			return {
 				content: [{ type: "text", text: payload }],
+				details: undefined,
 			};
 		},
 	});
@@ -105,6 +106,7 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 
 			return {
 				content: [{ type: "text", text: payload }],
+				details: undefined,
 			};
 		},
 	});
@@ -121,6 +123,7 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 
 			return {
 				content: [{ type: "text", text: docsSection }],
+				details: undefined,
 			};
 		},
 	});
