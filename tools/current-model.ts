@@ -6,10 +6,6 @@ const PROVIDERS = {
 		label: "OpenAI",
 		email: "noreply@openai.com",
 	},
-	"openai-codex": {
-		label: "OpenAI Codex",
-		email: "noreply@openai.com",
-	},
 	anthropic: {
 		label: "Anthropic",
 		email: "noreply@anthropic.com",
@@ -33,7 +29,8 @@ function humanizeIdentifier(identifier: string) {
 }
 
 function formatProvider(provider: string) {
-	const providerKey = provider.toLowerCase();
+	const rawProviderKey = provider.toLowerCase();
+	const providerKey = rawProviderKey.startsWith("openai") ? rawProviderKey.replace(/-?codex/gi, "") || "openai" : rawProviderKey;
 	const knownProvider = providerKey in PROVIDERS ? PROVIDERS[providerKey as keyof typeof PROVIDERS] : undefined;
 
 	return {
