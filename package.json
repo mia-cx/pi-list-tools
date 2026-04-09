@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
-  "description": "A tiny extension that exposes the current tool inventory, guidelines, and runtime docs paths.",
+  "description": "A tiny extension that exposes the current tool inventory, guidelines, and runtime docs section.",
   "keywords": ["pi-package"],
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*",

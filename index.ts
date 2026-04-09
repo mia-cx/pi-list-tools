@@ -15,6 +15,7 @@ function getRuntimeDocsPaths() {
 			return {
 				readmePath: resolve(join(dir, "README.md")),
 				docsPath: resolve(join(dir, "docs")),
+				examplesPath: resolve(join(dir, "examples")),
 			};
 		}
 
@@ -24,7 +25,23 @@ function getRuntimeDocsPaths() {
 	return {
 		readmePath: resolve(join(dirname(packageEntry), "README.md")),
 		docsPath: resolve(join(dirname(packageEntry), "docs")),
+		examplesPath: resolve(join(dirname(packageEntry), "examples")),
 	};
+}
+
+function extractDocsSection(systemPrompt: string) {
+	const match = systemPrompt.match(/Pi documentation:\n([\s\S]*?)(?:\n\nCurrent date:|\n\n# Project Context|\nCurrent working directory:|$)/);
+	if (!match) {
+		return "";
+	}
+
+	const { readmePath, docsPath, examplesPath } = getRuntimeDocsPaths();
+
+	return `Pi documentation:\n${match[1]
+		.trim()
+		.replace(/\$\{readmePath\}/g, readmePath)
+		.replace(/\$\{docsPath\}/g, docsPath)
+		.replace(/\$\{examplesPath\}/g, examplesPath)}`;
 }
 
 function extractGuidelines(systemPrompt: string): string[] {
@@ -89,11 +106,16 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 	pi.registerTool({
 		name: "runtime_docs",
 		label: "Runtime Docs",
-		description: "Get the current runtime README and docs paths.",
-		promptSnippet: "Get the current runtime README and docs paths.",
+		description: "Get the default runtime docs section with resolved paths.",
+		promptSnippet: "Get the default runtime docs section with resolved paths.",
 		parameters: Type.Object({}),
-		async execute() {
-			const payload = getRuntimeDocsPaths();
+		async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
+			const systemPrompt = ctx.getSystemPrompt();
+			const docsSection = extractDocsSection(systemPrompt);
+			const payload = {
+				docsSection,
+				paths: getRuntimeDocsPaths(),
+			};
 
 			return {
 				content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],

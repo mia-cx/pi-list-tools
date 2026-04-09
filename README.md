@@ -1,6 +1,6 @@
 # pi-list-tools
 
-A tiny extension that exposes the current tool inventory via `list_tools`, the current guidelines via `list_guidelines`, and the runtime documentation paths via `runtime_docs`.
+A tiny extension that exposes the current tool inventory via `list_tools`, the current guidelines via `list_guidelines`, and the runtime docs section via `runtime_docs`.
 
 ## What it does
 
@@ -35,4 +35,4 @@ Suggested wording:
 
 - Built-in tools: `read`, `write`, `edit`, `bash`, `mcp`
 - For anything beyond built-ins, call `list_tools` to inspect the current tool inventory.
-- To get the runtime README and docs paths, call `runtime_docs`.
+- To get the runtime docs section with resolved paths, call `runtime_docs`.
