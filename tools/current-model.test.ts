@@ -33,6 +33,7 @@ describe("current_model", () => {
 				provider: "openai",
 				id: "gpt-5.4",
 			},
+			"GPT-5.4",
 			"You're currently running as OpenAI GPT-5.4 <noreply@openai.com>, with the id \"openai/gpt-5.4\".",
 		],
 		[
@@ -41,6 +42,7 @@ describe("current_model", () => {
 				provider: "openai",
 				id: "gpt-5.4-mini",
 			},
+			"GPT-5.4 Mini",
 			"You're currently running as OpenAI GPT-5.4 Mini <noreply@openai.com>, with the id \"openai/gpt-5.4-mini\".",
 		],
 		[
@@ -49,6 +51,7 @@ describe("current_model", () => {
 				provider: "anthropic",
 				id: "claude-opus-4-6",
 			},
+			"Claude Opus 4.6",
 			"You're currently running as Anthropic Claude Opus 4.6 <noreply@anthropic.com>, with the id \"anthropic/claude-opus-4-6\".",
 		],
 		[
@@ -57,9 +60,19 @@ describe("current_model", () => {
 				provider: "anthropic",
 				id: "claude-sonnet-4-6",
 			},
+			"Claude Sonnet 4.6",
 			"You're currently running as Anthropic Claude Sonnet 4.6 <noreply@anthropic.com>, with the id \"anthropic/claude-sonnet-4-6\".",
 		],
-	])("formats %s", async (_label, model, expected) => {
+		[
+			"anthropic/claude-3-7-sonnet-latest",
+			{
+				provider: "anthropic",
+				id: "claude-3-7-sonnet-latest",
+			},
+			"Claude 3.7 Sonnet Latest",
+			"You're currently running as Anthropic Claude 3.7 Sonnet Latest <noreply@anthropic.com>, with the id \"anthropic/claude-3-7-sonnet-latest\".",
+		],
+	])("formats %s", async (_label, model, modelLabel, expected) => {
 		const result = await runCurrentModel(model);
 
 		expect(result.content).toEqual([{ type: "text", text: expected }]);
@@ -68,14 +81,7 @@ describe("current_model", () => {
 			providerLabel: model.provider === "openai" ? "OpenAI" : "Anthropic",
 			attributionEmail: model.provider === "openai" ? "noreply@openai.com" : "noreply@anthropic.com",
 			modelId: model.id,
-			modelLabel:
-				model.provider === "openai"
-					? model.id === "gpt-5.4-mini"
-						? "GPT-5.4 Mini"
-						: "GPT-5.4"
-					: model.id === "claude-opus-4-6"
-						? "Claude Opus 4.6"
-						: "Claude Sonnet 4.6",
+			modelLabel,
 			fullModelId: `${model.provider}/${model.id}`,
 			formatted: expected,
 		});

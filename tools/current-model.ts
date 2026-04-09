@@ -42,6 +42,10 @@ function formatOpenAIModel(modelId: string) {
 	return [base, suffix].filter(Boolean).join(" ");
 }
 
+function isNumericSegment(segment: string) {
+	return /^\d+$/.test(segment);
+}
+
 function formatAnthropicModel(modelId: string) {
 	const parts = modelId.split("-");
 	const family = parts.shift() ?? modelId;
@@ -50,10 +54,30 @@ function formatAnthropicModel(modelId: string) {
 		return titleCase(family);
 	}
 
-	const tier = titleCase(parts.shift()!);
-	const version = parts.join(".");
+	const labelParts = [titleCase(family)];
 
-	return [titleCase(family), tier, version].filter(Boolean).join(" ");
+	if (isNumericSegment(parts[0])) {
+		const majorVersion = parts.shift()!;
+		const minorVersion = parts[0] && isNumericSegment(parts[0]) ? parts.shift()! : undefined;
+		labelParts.push([majorVersion, minorVersion].filter(Boolean).join("."));
+	} else {
+		labelParts.push(titleCase(parts.shift()!));
+
+		const versionParts = [];
+		while (parts.length > 0 && isNumericSegment(parts[0])) {
+			versionParts.push(parts.shift()!);
+		}
+
+		if (versionParts.length > 0) {
+			labelParts.push(versionParts.join("."));
+		}
+	}
+
+	if (parts.length > 0) {
+		labelParts.push(parts.map(titleCase).join(" "));
+	}
+
+	return labelParts.join(" ");
 }
 
 function formatModel(provider: string, modelId: string) {
