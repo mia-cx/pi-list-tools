@@ -31,4 +31,5 @@ When the user asks about this coding agent itself -- its SDK, extensions, themes
 
 - When working in a git repo on a feature, fix, or anything that should be isolated from the current branch, use a git worktree.
 - All worktrees go in `.worktrees/` at the repo root: `git worktree add .worktrees/<name> -b <branch-name>`.
+- Before creating a worktree, ensure `main` is clean and up to date with remote.
 - Only delete a worktree after its branch has been merged into `main`.
