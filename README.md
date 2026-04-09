@@ -1,36 +1,32 @@
 # pi-list-tools
 
-A tiny extension that exposes the current tool inventory via `list_tools`, the current guidelines via `list_guidelines`, the current active model via `current_model`, and the runtime docs section via `runtime_docs`.
+A pi extension that gives the model runtime introspection — it can discover its own tools, guidelines, active model, and documentation paths instead of having them hardcoded into the system prompt.
 
-## What it does
+## Why
 
-`list_tools` returns the same `Available tools:` section style as the built-in system prompt, with one-line snippets.
+Default system prompts bake in a static tool list and host-specific references. When tools change (extensions installed, MCP servers added), the prompt is stale. This extension replaces static sections with live queries the model can call at any time.
 
-The output comes from the current session state, so it reflects whatever is installed right now.
+## Tools
+
+| Tool | Returns |
+|---|---|
+| `list_tools` | `Available tools:` with `name: description` bullets for every registered tool (built-in, extension, MCP) |
+| `list_guidelines` | `Guidelines:` with the active guideline bullets extracted from the system prompt |
+| `current_model` | `Current model:` with the active `provider/id` |
+| `runtime_docs` | The pi documentation section with `${readmePath}`, `${docsPath}`, and `${examplesPath}` resolved to real filesystem paths |
+
+All output comes from live session state, so it always reflects what is currently installed.
 
 ## Install
-
-Symlink the extension directory into your global extensions folder:
-
-```bash
-ln -s ~/Development/mia-cx/pi-list-tools ~/.pi/agent/extensions/pi-list-tools
-```
-
-Or install it as a package from git:
 
 ```bash
 pi install git:github.com/mia-cx/pi-list-tools
 ```
 
-## System prompt usage
+The package entrypoint is `index.ts`, so it works as a git-installed pi package.
 
-Use `list_tools`, `list_guidelines`, `current_model`, and `runtime_docs` in the system prompt instead of naming the host application directly.
+## System prompt
 
-The package entrypoint is `index.ts`, so it also works as a git-installed pi package.
+A reference system prompt is included at [SYSTEM.md](SYSTEM.md). It replaces the usual static tool/guideline/docs sections with calls to the tools above, so the model discovers its environment at runtime instead of reading a frozen snapshot.
 
-Suggested wording:
-
-- `list_tools` returns `Available tools:` followed by `name: snippet` bullets.
-- `list_guidelines` returns `Guidelines:` followed by markdown bullets.
-- `current_model` returns `Current model:` followed by the active provider/id.
-- `runtime_docs` returns the docs block with resolved paths.
+Use it as-is or adapt the sections you need. See [SYSTEM.md](SYSTEM.md) for the full prompt including tool preferences, guideline discovery, doc lookup, and git worktree conventions.
