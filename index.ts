@@ -1,11 +1,10 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import { createRequire } from "node:module";
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const require = createRequire(import.meta.url);
-const packageEntry = require.resolve("@mariozechner/pi-coding-agent");
+const packageEntry = fileURLToPath(import.meta.resolve("@mariozechner/pi-coding-agent"));
 
 function getRuntimeDocsPaths() {
 	let dir = dirname(packageEntry);
