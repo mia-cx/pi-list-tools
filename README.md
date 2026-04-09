@@ -4,7 +4,7 @@ A tiny extension that exposes the current tool inventory via `list_tools`, the c
 
 ## What it does
 
-`list_tools` wraps the runtime tool registry and returns:
+`list_tools` wraps the runtime tool registry and returns a concise markdown summary of:
 
 - built-in tools
 - dynamically installed tools
@@ -35,4 +35,5 @@ Suggested wording:
 
 - Built-in tools: `read`, `write`, `edit`, `bash`, `mcp`
 - For anything beyond built-ins, call `list_tools` to inspect the current tool inventory.
-- To get the runtime docs section with resolved paths, call `runtime_docs`.
+- `list_guidelines` returns the active guidance as markdown bullets.
+- `runtime_docs` returns the docs block with resolved paths.
