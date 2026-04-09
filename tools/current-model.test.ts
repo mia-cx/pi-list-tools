@@ -48,6 +48,20 @@ const modelCases = [
 			"You're currently running as OpenAI Codex GPT-5.1 <noreply@openai.com>, with the id \"openai-codex/gpt-5.1\".",
 	},
 	{
+		label: "openai-codex/gpt-5.4",
+		model: { provider: "openai-codex", id: "gpt-5.4" },
+		modelLabel: "GPT-5.4",
+		expected:
+			"You're currently running as OpenAI Codex GPT-5.4 <noreply@openai.com>, with the id \"openai-codex/gpt-5.4\".",
+	},
+	{
+		label: "openai-codex/gpt-5.4-mini",
+		model: { provider: "openai-codex", id: "gpt-5.4-mini" },
+		modelLabel: "GPT-5.4 Mini",
+		expected:
+			"You're currently running as OpenAI Codex GPT-5.4 Mini <noreply@openai.com>, with the id \"openai-codex/gpt-5.4-mini\".",
+	},
+	{
 		label: "openai-codex/gpt-5.1-codex-max",
 		model: { provider: "openai-codex", id: "gpt-5.1-codex-max" },
 		modelLabel: "GPT-5.1 Codex Max",
@@ -146,6 +160,13 @@ const modelCases = [
 			"You're currently running as Anthropic Claude 3 Sonnet <noreply@anthropic.com>, with the id \"anthropic/claude-3-sonnet-20240229\".",
 	},
 	{
+		label: "anthropic/claude-haiku-4-5",
+		model: { provider: "anthropic", id: "claude-haiku-4-5" },
+		modelLabel: "Claude Haiku 4.5",
+		expected:
+			"You're currently running as Anthropic Claude Haiku 4.5 <noreply@anthropic.com>, with the id \"anthropic/claude-haiku-4-5\".",
+	},
+	{
 		label: "anthropic/claude-haiku-4-5-20251001",
 		model: { provider: "anthropic", id: "claude-haiku-4-5-20251001" },
 		modelLabel: "Claude Haiku 4.5",
@@ -165,6 +186,13 @@ const modelCases = [
 		modelLabel: "Claude Opus 4.1",
 		expected:
 			"You're currently running as Anthropic Claude Opus 4.1 <noreply@anthropic.com>, with the id \"anthropic/claude-opus-4-1\".",
+	},
+	{
+		label: "anthropic/claude-opus-4-6",
+		model: { provider: "anthropic", id: "claude-opus-4-6" },
+		modelLabel: "Claude Opus 4.6",
+		expected:
+			"You're currently running as Anthropic Claude Opus 4.6 <noreply@anthropic.com>, with the id \"anthropic/claude-opus-4-6\".",
 	},
 	{
 		label: "anthropic/claude-opus-4-1-20250805",
@@ -200,6 +228,13 @@ const modelCases = [
 		modelLabel: "Claude Sonnet 4.0",
 		expected:
 			"You're currently running as Anthropic Claude Sonnet 4.0 <noreply@anthropic.com>, with the id \"anthropic/claude-sonnet-4-0\".",
+	},
+	{
+		label: "anthropic/claude-sonnet-4-6",
+		model: { provider: "anthropic", id: "claude-sonnet-4-6" },
+		modelLabel: "Claude Sonnet 4.6",
+		expected:
+			"You're currently running as Anthropic Claude Sonnet 4.6 <noreply@anthropic.com>, with the id \"anthropic/claude-sonnet-4-6\".",
 	},
 	{
 		label: "anthropic/claude-sonnet-4-20250514",
