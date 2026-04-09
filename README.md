@@ -4,10 +4,7 @@ A tiny extension that exposes the current tool inventory via `list_tools`, the c
 
 ## What it does
 
-`list_tools` wraps the runtime tool registry and returns a concise markdown summary of:
-
-- built-in tools
-- dynamically installed tools
+`list_tools` returns the same `Available tools:` section style as the built-in system prompt, with one-line snippets.
 
 The output comes from the current session state, so it reflects whatever is installed right now.
 
@@ -33,7 +30,6 @@ The package entrypoint is `index.ts`, so it also works as a git-installed pi pac
 
 Suggested wording:
 
-- Built-in tools: `read`, `write`, `edit`, `bash`, `mcp`
-- For anything beyond built-ins, call `list_tools` to inspect the current tool inventory.
-- `list_guidelines` returns the active guidance as markdown bullets.
+- `list_tools` returns `Available tools:` followed by `name: snippet` bullets.
+- `list_guidelines` returns `Guidelines:` followed by markdown bullets.
 - `runtime_docs` returns the docs block with resolved paths.

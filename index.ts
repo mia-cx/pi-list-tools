@@ -43,20 +43,20 @@ function extractDocsSection(systemPrompt: string) {
 		.replace(/\$\{examplesPath\}/g, examplesPath)}`;
 }
 
-function formatToolSection(title: string, tools: Array<{ name: string; description: string }>) {
+function formatToolList(tools: Array<{ name: string; description: string }>) {
 	if (tools.length === 0) {
-		return `## ${title}\n- (none)`;
+		return "- (none)";
 	}
 
-	return `## ${title}\n${tools.map((tool) => `- \`${tool.name}\` — ${tool.description}`).join("\n")}`;
+	return tools.map((tool) => `- ${tool.name}: ${tool.description.replace(/\s+/g, " ").trim()}`).join("\n");
 }
 
 function formatGuidelineSection(guidelines: string[]) {
 	if (guidelines.length === 0) {
-		return "## Guidelines\n- (none)";
+		return "- (none)";
 	}
 
-	return `## Guidelines\n${guidelines.map((guideline) => `- ${guideline}`).join("\n")}`;
+	return guidelines.map((guideline) => `- ${guideline}`).join("\n");
 }
 
 function extractGuidelines(systemPrompt: string): string[] {
@@ -82,9 +82,7 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 		parameters: Type.Object({}),
 		async execute() {
 			const allTools = pi.getAllTools();
-			const builtinTools = allTools.filter((tool) => tool.sourceInfo.source === "builtin");
-			const dynamicTools = allTools.filter((tool) => tool.sourceInfo.source !== "builtin");
-			const payload = `${formatToolSection("Built-in tools", builtinTools)}\n\n${formatToolSection("Dynamic tools", dynamicTools)}`;
+			const payload = `Available tools:\n${formatToolList(allTools)}`;
 
 			return {
 				content: [{ type: "text", text: payload }],
@@ -102,7 +100,7 @@ export default function listToolsExtension(pi: ExtensionAPI) {
 		async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
 			const systemPrompt = ctx.getSystemPrompt();
 			const guidelines = extractGuidelines(systemPrompt);
-			const payload = formatGuidelineSection(guidelines);
+			const payload = `Guidelines:\n${formatGuidelineSection(guidelines)}`;
 
 			return {
 				content: [{ type: "text", text: payload }],
