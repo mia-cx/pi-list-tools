@@ -25,6 +25,20 @@ async function runCurrentModel(model: { provider: string; id: string } | null) {
 	return tool.execute("tool-call-1", {}, new AbortController().signal, () => {}, { model } as never);
 }
 
+function expectedProviderDetails(provider: string) {
+	if (provider.startsWith("openai")) {
+		return {
+			providerLabel: provider === "openai-codex" ? "OpenAI Codex" : "OpenAI",
+			attributionEmail: "noreply@openai.com",
+		};
+	}
+
+	return {
+		providerLabel: "Anthropic",
+		attributionEmail: "noreply@anthropic.com",
+	};
+}
+
 const modelCases = [
 	{
 		label: "openai-codex/gpt-5.1",
@@ -215,10 +229,12 @@ describe("current_model", () => {
 		const result = await runCurrentModel(model);
 
 		expect(result.content).toEqual([{ type: "text", text: expected }]);
+		const providerDetails = expectedProviderDetails(model.provider);
+
 		expect(result.details).toMatchObject({
 			provider: model.provider,
-			providerLabel: model.provider === "openai-codex" ? "OpenAI Codex" : model.provider === "openai" ? "OpenAI" : "Anthropic",
-			attributionEmail: model.provider === "anthropic" ? "noreply@anthropic.com" : "noreply@openai.com",
+			providerLabel: providerDetails.providerLabel,
+			attributionEmail: providerDetails.attributionEmail,
 			modelId: model.id,
 			modelLabel,
 			fullModelId: `${model.provider}/${model.id}`,
